@@ -1,0 +1,16 @@
+#================================================================================================================================
+#Oracle C3P0 数据源配置
+oracle.driverClassName=oracle.jdbc.xa.client.OracleXADataSource
+oracle.url=jdbc:oracle:thin:@192.168.110.63:1521:orcl
+oracle.username=kcpt
+oracle.password=kcpt
+#<!--初始化时获取三个连接，取值应在minPoolSize与maxPoolSize之间。Default: 3 -->
+oracle.initialPoolSize=10
+#<!--最大空闲时间,60秒内未使用则连接被丢弃。若为0则永不丢弃。Default: 0 -->
+oracle.maxIdleTime=30
+#<!--连接池中保留的最大连接数。Default: 15 -->
+oracle.maxPoolSize=25
+oracle.minPoolSize=10
+#<!--定义所有连接测试都执行的测试语句。在使用连接测试的情况下这个一显著提高测试速度。注意： 测试的表必须在初始数据源的时候就存在。Default: null-->
+oracle.preferredTestQuery=SELECT 1 from dual
+#================================================================================================================================

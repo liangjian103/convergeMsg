@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 定时器业务处理类- -->
+	<bean id="queryTerminalParameterQuartz" class="com.ctfo.parameter.QueryTerminalParameterQuartz" scope="singleton">
+		<property name="queryTerminalParameterDAO" ref="queryTerminalParameterDAO" />
+	</bean>
+
+	<!-- 定时加载报警规则 -->
+	<bean id="jobDetail_jobQueryTerminalParameter" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="queryTerminalParameterQuartz" />
+		<property name="targetMethod" value="loadCache" />
+	</bean>
+	<!-- 每天凌晨执行1次  -->
+	<bean id="cronTrigger_jobQueryTerminalParameter" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="jobDetail_jobQueryTerminalParameter" />
+		<property name="cronExpression" value="0 0 0 * * ?" />
+	</bean>
+
+	<!-- 添加触发器 如果将lazy-init='false'那么容器启动就会执行调度程序-->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref local="simpleTrigger_QueryTerminalParameter" />
+				<ref local="cronTrigger_jobQueryTerminalParameter" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="simpleTrigger_QueryTerminalParameter" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="jobDetail_jobQueryTerminalParameter" />
+		<!--延迟1ms-->
+		<property name="startDelay" value="1" />
+		<!--每0ms启动一次-->
+		<property name="repeatInterval" value="0" />
+		<!--重复0次-->
+		<property name="repeatCount" value="0" />
+	</bean>
+</beans>
